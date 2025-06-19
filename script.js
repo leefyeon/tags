@@ -40,7 +40,7 @@ timeZones.forEach(({zone, label}) => {
 
 const timeString = formatter.format(now);
 
-  if (hour >= 12 && hour <= 21) {
+  if (hour >= 12 && hour <= 20) {
     inRange.push(`<li>${label}: <strong>${timeString}</strong></li>`);
   } else {
     outRange.push(`<li>${label}: <span>${timeString}</span></li>`);
