@@ -60,4 +60,4 @@ function updateTimeZones() {
 }
 
 updateTimeZones();
-setInterval(updateTimeZones, 60000);
+setInterval(updateTimeZones, 600);
