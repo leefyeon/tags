@@ -14,50 +14,50 @@ const timeZones = [
   // { zone: "Pacific/Auckland", label: "NZST" }
 ];
 
-const now = new Date();
-const results = [];
-let inRange = [];
-let outRange = [];
+function updateTimeZones() {
+  const now = new Date();
+  let inRange = [];
+  let outRange = [];
 
-
-timeZones.forEach(({zone, label}) => {
-  // Format with timezone abbreviation
-  const formatter = new Intl.DateTimeFormat('en-US', {
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false,
-    timeZone: zone,
-  });
-
-  // Get the hour as a number for comparison
-  const hour = Number(
-    new Intl.DateTimeFormat('en-US', {
+  timeZones.forEach(({zone, label}) => {
+    const formatter = new Intl.DateTimeFormat('en-US', {
       hour: "2-digit",
+      minute: "2-digit",
       hour12: false,
       timeZone: zone,
-    }).format(now)
-  );
+    });
 
-const timeString = formatter.format(now);
+    const hour = Number(
+      new Intl.DateTimeFormat('en-US', {
+        hour: "2-digit",
+        hour12: false,
+        timeZone: zone,
+      }).format(now)
+    );
 
-  if (hour >= 12 && hour <= 20) {
-    inRange.push(`<li>${label}: <strong>${timeString}</strong></li>`);
+    const timeString = formatter.format(now);
+
+    if (hour >= 12 && hour <= 20) {
+      inRange.push(`<li>${label}: <strong>${timeString}</strong></li>`);
+    } else {
+      outRange.push(`<li>${label}: <span>${timeString}</span></li>`);
+    }
+  });
+
+  let html = "";
+
+  if (inRange.length) {
+    html += `<p>It is between 12pm and 9pm in these time zones:</p><ul>${inRange.join('')}</ul>`;
   } else {
-    outRange.push(`<li>${label}: <span>${timeString}</span></li>`);
+    html += "<p>It is not between 12pm and 9pm in any of the listed time zones.</p>";
   }
-});
 
-let html = "";
+  if (outRange.length) {
+    html += `<p>It is <em>not</em> between 12pm and 9pm in these time zones:</p><ul>${outRange.join('')}</ul>`;
+  }
 
-if (inRange.length) {
-  html += `<p>It is between 12pm and 9pm in these time zones:</p><ul>${inRange.join('')}</ul>`;
-} else {
-  html += "<p>It is not between 12pm and 9pm in any of the listed time zones.</p>";
+  document.getElementById("greeting").innerHTML = html;
 }
 
-if (outRange.length) {
-  html += `<p>It is <em>not</em> between 12pm and 9pm in these time zones:</p><ul>${outRange.join('')}</ul>`;
-}
-
-
-document.getElementById("greeting").innerHTML = html;
+updateTimeZones();
+setInterval(updateTimeZones, 60000);
